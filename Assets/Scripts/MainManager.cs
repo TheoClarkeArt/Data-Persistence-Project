@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -12,16 +13,30 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
+    public Text IngameNameText;
+    public Text BestScoreText;
     
     private bool m_Started = false;
     private int m_Points;
+    private int BestScore;
     
     private bool m_GameOver = false;
+
+    public MainManagerMenu MainManagerMenuObj;
+
+    public string PlayerNameIngame;
 
     
     // Start is called before the first frame update
     void Start()
     {
+        MainManagerMenuObj = FindObjectOfType<MainManagerMenu>();
+
+        PlayerNameIngame = MainManagerMenuObj.PlayerName;
+        IngameNameText.text = ("Name: " + PlayerNameIngame);
+
+        BestScoreText.text = ("Best Score: " + MainManagerMenuObj.BestScoreMenu);
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -72,5 +87,11 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        if (m_Points > MainManagerMenuObj.BestScoreMenu)
+        {
+            BestScore = m_Points;
+            BestScoreText.text = ("Best Score: " + BestScore);
+            MainManagerMenuObj.BestScoreMenu = (BestScore);
+        }
     }
 }
