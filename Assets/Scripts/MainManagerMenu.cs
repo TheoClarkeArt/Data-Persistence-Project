@@ -14,6 +14,7 @@ public class MainManagerMenu : MonoBehaviour
     public TextMeshProUGUI PlayerNameTextMenu;
     public GameObject PlayerNameTextObject;
     public int BestScoreMenu;
+    public string BestScoreNameMenu;
 
     private void Awake()
     {
@@ -27,6 +28,8 @@ public class MainManagerMenu : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        LoadBestScoreInfo();
     }
 
     public void OpenMain()
@@ -39,20 +42,32 @@ public class MainManagerMenu : MonoBehaviour
     class SaveBestScoreData
     {
         public int BestScoreSaved;
+        public string BestScoreNameSaved;
     }
 
-    public void SaveBestScore()
+    public void SaveBestScoreInfo()
     {
         SaveBestScoreData data = new SaveBestScoreData();
         data.BestScoreSaved = BestScoreMenu;
+        data.BestScoreNameSaved = BestScoreNameMenu;
 
         string json = JsonUtility.ToJson(data);
 
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
-    public void LoadBestScore()
+    public void LoadBestScoreInfo()
     {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveBestScoreData data = JsonUtility.FromJson<SaveBestScoreData>(json);
 
+            BestScoreMenu = data.BestScoreSaved;
+            BestScoreNameMenu = data.BestScoreNameSaved;
+        }
+
+        Debug.Log(path);
     }
 }
